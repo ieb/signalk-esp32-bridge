@@ -24,6 +24,9 @@ public:
   virtual bool isEnabled() {
     return enabled;
   };
+  virtual uint8_t getAccess() {
+    return BLECharacteristic::PROPERTY_READ;
+  }
 protected:
   bool enabled;
 };

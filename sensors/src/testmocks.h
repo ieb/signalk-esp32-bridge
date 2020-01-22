@@ -18,6 +18,8 @@ class BLECharacteristicCallbacks {
 
 };
 
+uint8_t testDataWritten[] = { 36, 39, 32, 33, 34, 35, 0 };
+
 class BLECharacteristic {
 public:
   void setCallbacks(BLECharacteristicCallbacks  * callbacks) {
@@ -25,6 +27,10 @@ public:
   }
   void setValue(uint8_t * buffer, uint32_t size) {
     std::cout << "Setting value for characteristed to " << size << " long" << std::endl;
+  }
+
+  uint8_t*  getData() {
+    return &testDataWritten[0];
   }
 
   static const uint32_t PROPERTY_READ      = 1<<0;

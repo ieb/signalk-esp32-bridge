@@ -49,16 +49,16 @@ public:
         if ( sensor->isEnabled() ) {
           BLECharacteristic* pCharacteristic = pService->createCharacteristic(
                           sensor->getCharacteristicUUID(),
-                          BLECharacteristic::PROPERTY_READ  
+                          sensor->getAccess()  
                         );
           pCharacteristic->setCallbacks(sensor->getCallbacks());
-          psensors++;                  
           logb("Enabled ");
         } else {
           logb("Disabled ");
 
         }
         log(sensor->getName());
+        psensors++;                  
       }
       // Start the service
       pService->start();
