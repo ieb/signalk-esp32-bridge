@@ -62,12 +62,36 @@ class BLEPeripheral {
         });
     }
 
+    watch(handler) {
+        this.services.forEach((service) => {
+            service.characteristics.forEach((characteristic) => {
+                if (characteristic.properties.indexOf('notify') !== -1 ||
+                    characteristic.properties.indexOf('indicate') !== -1) {
+                    characteristic.on('notify', (value) => {
+                        handler(value, service.uuid, characteristic.uuid);
+                    }); 
+                    console.log("Subscribing to ",service.uuid, characteristic.uuid);
+                    characteristic.subscribe((error) => {
+                        console.log("Subscribed to ",service.uuid, characteristic.uuid);
+                        if ( error) {
+                            reject(error);
+                        } else {
+                            console.log("Subscribed to ",service.uuid, characteristic.uuid);
+                            resolve();
+                        }
+                    });
+                }
+            });
+        });
+    }
 
 }
 
 class BLEService {
     constructor(service) {
         this.service = service;
+        this.name = service.name;
+        this.uuid = service.uuid;
         this.characteristics = [];
     }
 
@@ -99,6 +123,9 @@ class BLEService {
 class BLECharacteristic {
     constructor(characteristic) {
         this.characteristic = characteristic;
+        this.name = characteristic.name;
+        this.uuid = characteristic.uuid;
+        this.properties = characteristic.properties;
         this.descriptors = [];
     }
 
@@ -136,6 +163,12 @@ class BLECharacteristic {
                 });
             }
         });
+    }
+    subscribe(cb) {
+        this.characteristic.subscribe(cb);
+    }
+    on(evt, cb) {
+        this.characteristic.on(evt, cb);
     }
 }
 

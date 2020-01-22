@@ -51,20 +51,20 @@ noble.on('discover', async function(peripheral) {
     await peripheral.connect();
     console.log("Connect finished ");
     peripheral.services.forEach((service) => {
-      var serviceInfo = service.service.uuid;
+      var serviceInfo = service.uuid;
 
-      if (service.service.name) {
-        serviceInfo += ' (' + service.service.name + ')';
+      if (service.name) {
+        serviceInfo += ' (' + service.name + ')';
       }
       console.log("Service",serviceInfo);
       service.characteristics.forEach((characteristic) => {
-        var characteristicInfo = '  ' + characteristic.characteristic.uuid;
+        var characteristicInfo = '  ' + characteristic.uuid;
 
         if (characteristic.name) {
-          characteristicInfo += ' (' + characteristic.characteristic.name + ')';
+          characteristicInfo += ' (' + characteristic.name + ')';
         }
         console.log("Charateristic", characteristicInfo);
-        console.log('    properties  ' + characteristic.characteristic.properties.join(', '));
+        console.log('    properties  ' + characteristic.properties.join(', '));
         characteristic.descriptors.forEach((descriptor) => {
           if (descriptor.data) {
             console.log('(',descriptor.data.toString(),')');
@@ -72,6 +72,11 @@ noble.on('discover', async function(peripheral) {
         });
       });
     });
+    peripheral.watch((value, service, characteristic) => {
+      console.log()
+    });
+
+
   }
 });
 
