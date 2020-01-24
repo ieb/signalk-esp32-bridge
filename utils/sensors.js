@@ -15,7 +15,7 @@ class BMP280Sensor extends EventEmitter {
         const BMP280_CHARACTERISTIC = "beb5483e36e14688b7f5ea07361b26a8";
         peripheral.findAll((service, characteristic) => {
             console.log("Found BMP280Sensor ",service.uuid, characteristic.uuid);
-          setTimeout( async () => {
+          setInterval( async () => {
             var data = await characteristic.readValue();
             console.log("BMPData",data);
             // temp, pressure, humidity as 3 32bit floats, 12 bytes long see BMP280Sensor.h pt_sensor_t
@@ -53,7 +53,7 @@ class OneWireTemperatureSensor extends EventEmitter {
           };
           console.log("Found OneWire sensors ",sensorIDs);
 
-          setTimeout( async () => {
+          setInterval( async () => {
             var data = await characteristic.readValue();
             console.log("OneWire",data);
             /*
@@ -90,7 +90,7 @@ class VoltageSensor extends EventEmitter {
         const VOLTAGE_CHARACTERISTIC = "2bfa8db4868a4e78a841e11c70083fc1";
         peripheral.findAll((service, characteristic) => {
             console.log("Found VoltageSensor ",service.uuid, characteristic.uuid);
-          setTimeout( async () => {
+          setInterval( async () => {
             var data = await characteristic.readValue();
             console.log("Volatages",data);
             // voltages all unit16_t 
@@ -116,7 +116,7 @@ class UptimeSensor extends EventEmitter {
         const UPTIME_CHARACTERISTIC = "9122a4c3ac9247c48d3dfb0f5f8e137a";
         peripheral.findAll((service, characteristic) => {
             console.log("Found UptimeSensor ",service.uuid, characteristic.uuid);
-          setTimeout( async () => {
+          setInterval( async () => {
             var data = await characteristic.readValue();
             console.log("Uptime",data);
             // uptime in millis, unsigned long 
