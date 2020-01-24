@@ -1,5 +1,9 @@
 var noble = require('@abandonware/noble');
 var {BLEPeripheral} = require('./asyncBLE');
+var {BMP280Sensor,
+    OneWireTemperatureSensor,
+    VoltageSensor,
+    UptimeSensor } = require('./sensors');
 
 var peripheralIdOrAddress = process.argv[2].toLowerCase();
 
@@ -49,6 +53,7 @@ noble.on('discover', async function(peripheral) {
 
     var peripheral = new BLEPeripheral(peripheral);
     await peripheral.connect();
+
     
     console.log("Connect finished ");
     peripheral.services.forEach((service) => {
@@ -73,10 +78,23 @@ noble.on('discover', async function(peripheral) {
         });
       });
     });
-    peripheral.watch((value, service, characteristic) => {
-      console.log()
-    });
 
+    var bmp = new BMP280Sensor(peripheral, 5000);
+    bmp.on("data", (enviro) => {
+      console.log("Environment ", enviro);
+    });
+    var temps = new OneWireTemperatureSensor(peripheral, 5000);
+    temps.on("data", (t)  => {
+      console.log("Temperatures ", t);
+    });
+    var volts = new VoltageSensor(peripheral, 5000);
+    volts.on("data", (v) =>  {
+      console.log("Voltages ", v);
+    });
+    var uptime = new UptimeSensor(peripheral, 5000);
+    uptime.on("data", (u) =>  {
+      console.log("Uptime ", u);
+    });
 
   }
 });

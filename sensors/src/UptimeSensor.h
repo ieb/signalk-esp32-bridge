@@ -16,17 +16,21 @@
 class SKUptimeSensor: public SkSensor, public BLECharacteristicCallbacks   {
 public:
 
-  SKUptimeSensor() {  
+  SKUptimeSensor() { 
+    uuid = new BLEUUID("9122a4c3-ac92-47c4-8d3d-fb0f5f8e137a");
     enabled = true;
     log("Uptime sensor setup complete");
   }
   const char * getName() {
     return "Uptime at 9122a4c3-ac92-47c4-8d3d-fb0f5f8e137a";
   }
-  const char * getCharacteristicUUID() {
-    return "9122a4c3-ac92-47c4-8d3d-fb0f5f8e137a";
+  uint8_t getNCharacteristics() {
+    if ( enabled ) {
+      return 1;
+    } 
+    return 0;
   }
-  BLECharacteristicCallbacks * getCallbacks() {
+  BLECharacteristicCallbacks * getCallbacks(uint8_t i) {
     return this;
   }
   void onRead(BLECharacteristic* pcharac) {

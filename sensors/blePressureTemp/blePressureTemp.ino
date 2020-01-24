@@ -7,13 +7,15 @@
 
 #define ONEWIREBUS 15  // ESP32 OneWire pin.
 
+OneWireSensor * oneWire;
 
 void setup() {
   Serial.begin(115200);
+  oneWire = new OneWireSensor(ONEWIREBUS);
   SkSensor * sensors[] = {
      new SKUptimeSensor(),
      new BMP280Sensor(),
-     new OneWireSensor(ONEWIREBUS),
+     oneWire,
      new VoltageSensor((uint8_t *)VoltageSensor_ADC1_PINS),
      NULL
   };
@@ -23,5 +25,6 @@ void setup() {
 
 
 void loop() {
-  delay(10000);
+  oneWire->execute();
+  delay(oneWire->getDelay());
 }

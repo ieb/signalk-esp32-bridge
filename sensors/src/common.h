@@ -18,17 +18,18 @@ public:
   SkSensor() {
     enabled = false;
   }
-  virtual const char * getCharacteristicUUID()  = 0;
-  virtual BLECharacteristicCallbacks * getCallbacks() = 0;
+  virtual BLEUUID getCharacteristicUUID(uint8_t i) {
+    return *uuid;
+  }
+  virtual BLECharacteristicCallbacks * getCallbacks(uint8_t i) = 0;
   virtual const char * getName() = 0;
-  virtual bool isEnabled() {
-    return enabled;
-  };
-  virtual uint8_t getAccess() {
+  virtual uint8_t getNCharacteristics() = 0;
+  virtual uint8_t getAccess(uint8_t i) {
     return BLECharacteristic::PROPERTY_READ;
   }
 protected:
   bool enabled;
+  BLEUUID *uuid;
 };
 
 

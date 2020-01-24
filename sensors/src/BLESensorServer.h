@@ -46,12 +46,15 @@ public:
         if (sensor == NULL) {
           break;
         }
-        if ( sensor->isEnabled() ) {
-          BLECharacteristic* pCharacteristic = pService->createCharacteristic(
-                          sensor->getCharacteristicUUID(),
-                          sensor->getAccess()  
-                        );
-          pCharacteristic->setCallbacks(sensor->getCallbacks());
+        int n = sensor->getNCharacteristics();
+        if ( n > 0 ) {
+          for (int i = 0; i < n; ++i) {
+            BLECharacteristic* pCharacteristic = pService->createCharacteristic(
+                            sensor->getCharacteristicUUID(i),
+                            sensor->getAccess(i)  
+                          );
+            pCharacteristic->setCallbacks(sensor->getCallbacks(i));
+          }
           logb("Enabled ");
         } else {
           logb("Disabled ");

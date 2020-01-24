@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include <iostream>
+#include <string.h>
 
 #define logb(x) std::cout << x
 #define log(x) std::cout << x << std::endl
@@ -14,6 +15,20 @@ unsigned long millis() {
   return mils++;
 }
 
+class BLEUUID {
+public:
+  BLEUUID(std::string uuid) {
+
+  }
+  static BLEUUID fromString(std::string uuid) {
+    return *(new BLEUUID(uuid));
+  }
+  bool equals(BLEUUID uuid) {
+    return false;
+  }
+
+
+};
 class BLECharacteristicCallbacks {
 
 };
@@ -32,7 +47,9 @@ public:
   uint8_t*  getData() {
     return &testDataWritten[0];
   }
-
+  BLEUUID getUUID() {
+    return *(new BLEUUID("nothing"));
+  }
   static const uint32_t PROPERTY_READ      = 1<<0;
   static const uint32_t PROPERTY_WRITE     = 1<<1;
   static const uint32_t PROPERTY_NOTIFY    = 1<<2;
@@ -76,6 +93,9 @@ public:
   BLECharacteristic*  createCharacteristic(const char * uuid, uint16_t options) {
     return new BLECharacteristic();
   }
+  BLECharacteristic* createCharacteristic(BLEUUID uuid, uint32_t properties) {
+    return new BLECharacteristic();    
+  }
   void start() {
 
   }
@@ -89,6 +109,11 @@ public:
   BLEService* createService(const char * uuid) {
     return new BLEService();
   }
+  BLEService*  createService(BLEUUID uuid, uint32_t numHandles=15, uint8_t inst_id=0) {
+    return new BLEService();
+
+  }
+
   void startAdvertising() {
     
   }

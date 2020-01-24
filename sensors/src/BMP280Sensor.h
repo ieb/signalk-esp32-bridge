@@ -23,6 +23,7 @@ public:
   } pt_sensor_t;
 
   BMP280Sensor() {
+      uuid = new BLEUUID("beb5483e-36e1-4688-b7f5-ea07361b26a8");
       bmp_temp = bmp.getTemperatureSensor();
       bmp_pressure = bmp.getPressureSensor();
       // Library seems to think this is at 0x77 which all the BMP280s I have had are not.
@@ -41,16 +42,21 @@ public:
                       Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
     
       bmp_temp->printSensorDetails();
+
       log("BMP280 Sensor setup Complete");
 
   }
   const char * getName() {
     return "BPM280 at beb5483e-36e1-4688-b7f5-ea07361b26a8";
   }
-  const char * getCharacteristicUUID() {
-    return "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+
+  uint8_t getNCharacteristics() {
+    if ( enabled ) {
+      return 1;
+    } 
+    return 0;
   }
-  BLECharacteristicCallbacks * getCallbacks() {
+  BLECharacteristicCallbacks * getCallbacks(uint8_t i) {
     return this;
   }
   void read(pt_sensor_t * readings) {
@@ -58,14 +64,18 @@ public:
     this->bmp_temp->getEvent(&temp_event);
     this->bmp_pressure->getEvent(&pressure_event);
     readings->pressure = pressure_event.pressure;
-    readings->temperature = pressure_event.temperature;
+    readings->temperature = temp_event.temperature;
+    readings->humidity = 0;
 
   }
   void onRead(BLECharacteristic* pcharac) {
+      unsigned long t0 = millis();
       pt_sensor_t readings;
       read(&readings);
       pcharac->setValue((uint8_t *)&readings, sizeof(readings));
-      log("BMP280 Read done");
+      t0 = millis() - t0;
+      logb("BMP280 Read done in: ");
+      log(t0);
   }
   void onWrite(BLECharacteristic* pCharacteristic) {
   }

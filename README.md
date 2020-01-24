@@ -17,3 +17,12 @@ Sensors include
 * BMP280 and BME280 environment sensors
 * 1Wire DS18B20 temperature probes
 * Voltage measurements 12bit 0-3.3v
+
+
+
+# notes
+
+    rsync -v -r --exclude node_modules --delete -e ssh * 192.168.1.188:signalk-ble-bridge 
+
+
+    rsync -v -r --exclude node_modules --delete -e ssh 192.168.1.188:signalk-ble-bridge .

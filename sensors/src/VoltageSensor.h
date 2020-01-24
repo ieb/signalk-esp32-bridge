@@ -18,7 +18,10 @@
 class VoltageSensor: public SkSensor, public BLECharacteristicCallbacks   {
 public:
 
+  
+
   VoltageSensor(uint8_t * newPins) {
+    uuid = new BLEUUID("2bfa8db4-868a-4e78-a841-e11c70083fc1");
     pins = NULL;
     voltages = NULL;
     savePins(newPins);
@@ -28,22 +31,29 @@ public:
   const char * getName() {
     return "Voltages at 2bfa8db4-868a-4e78-a841-e11c70083fc1";
   }
-  const char * getCharacteristicUUID() {
-    return "2bfa8db4-868a-4e78-a841-e11c70083fc1";
-  }
-  BLECharacteristicCallbacks * getCallbacks() {
+  BLECharacteristicCallbacks * getCallbacks(uint8_t i) {
     return this;
   }
-  uint8_t getAccess() {
+  uint8_t getNCharacteristics() {
+    if ( enabled ) {
+      return 1;
+    } 
+    return 0;
+  }
+
+  uint8_t getAccess(uint8_t i) {
     return BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE;
   }
 
   void onRead(BLECharacteristic* pcharac) {
+      unsigned long t0 = millis();
       for (int i = 0; i < nvoltages; ++i) {
         voltages[i] = analogRead(pins[i]); 
       }
       pcharac->setValue((uint8_t *)voltages, sizeof(uint16_t)*nvoltages);
-      log("Voltages Read done");
+      t0 = millis() - t0;
+      logb("Voltages Read done in :");
+      log(t0);
   }
   void onWrite(BLECharacteristic* pcharac) {
     savePins(pcharac->getData());

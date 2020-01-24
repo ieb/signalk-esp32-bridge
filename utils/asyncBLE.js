@@ -85,6 +85,21 @@ class BLEPeripheral {
         });
     }
 
+    findAll(cb, serviceID, characteristicID) {
+        this.services.forEach((service) => {
+            if ( serviceID === undefined || service.uuid === serviceID ) {
+                service.characteristics.forEach((characteristic) => {
+                    if ( characteristicID === undefined || characteristic.uuid === characteristicID ) {
+                        console.log("Matched ", service.uuid, characteristic.uuid);
+                        cb(service, characteristic);
+                    }
+                });
+            }
+        });
+    }
+
+
+
 }
 
 class BLEService {
@@ -116,6 +131,14 @@ class BLEService {
            }
           });
         });
+    }
+    getCharacteristic(characteristicID) {
+        for (var i = 0; i < this.characteristics.length; i++) {
+            if ( characteristicID === this.characteristics[i].uuid ) {
+                return this.characteristics[i];
+            }
+        };
+        return undefined;
     }
 }
 
